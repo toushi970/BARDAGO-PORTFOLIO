@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Portfolio</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+
+body {
+  background:#0f0f0f;
+  color:white;
+  scroll-behavior:smooth;
+}
+
+/* NAV */
+nav {
+  position:fixed;
+  width:100%;
+  top:0;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(10px);
+  padding:15px;
+  display:flex;
+  justify-content:center;
+  z-index:1000;
+}
+
+nav a {
+  margin:0 15px;
+  text-decoration:none;
+  color:white;
+  transition:0.3s;
+}
+
+nav a:hover { color:#00f7ff; }
+
+/* SECTIONS */
+section {
+  min-height:100vh;
+  padding:100px 20px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+
+.hero {
+  background:linear-gradient(135deg,#111,#1a1a1a);
+}
+
+.hero h1 { font-size:3rem; }
+.hero p { color:#aaa; margin-top:10px; }
+
+.btn {
+  margin-top:20px;
+  padding:10px 20px;
+  border:none;
+  background:#00f7ff;
+  color:black;
+  cursor:pointer;
+  border-radius:20px;
+  transition:0.3s;
+}
+
+.btn:hover { transform:scale(1.1); }
+
+/* CARDS */
+.cards {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.card {
+  background:#1c1c1c;
+  margin:15px;
+  padding:20px;
+  border-radius:15px;
+  width:250px;
+  transition:0.4s;
+  position:relative;
+  overflow:hidden;
+}
+
+.card::before {
+  content:"";
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:linear-gradient(120deg,transparent,#00f7ff,transparent);
+  top:-100%;
+  left:0;
+  transition:0.5s;
+}
+
+.card:hover::before { top:100%; }
+
+.card:hover {
+  transform:translateY(-10px) scale(1.05);
+}
+
+/* SKILLS */
+.skill {
+  width:300px;
+  margin:10px 0;
+}
+
+.bar {
+  height:10px;
+  background:#333;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.fill {
+  height:100%;
+  width:0;
+  background:#00f7ff;
+  transition:1.5s;
+}
+
+/* FADE ANIMATION */
+.fade {
+  opacity:0;
+  transform:translateY(40px);
+  transition:1s;
+}
+
+.fade.show {
+  opacity:1;
+  transform:translateY(0);
+}
+
+footer {
+  padding:20px;
+  text-align:center;
+  background:#111;
+}
+
+/* PARTICLES */
+canvas {
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:-1;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="bg"></canvas>
+
+<nav>
+  <a href="#home">Home</a>
+  <a href="#about">About</a>
+  <a href="#skills">Skills</a>
+  <a href="#projects">Projects</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<section id="home" class="hero fade">
+  <h1>YOUR NAME</h1>
+  <p>Aspiring Developer / Designer</p>
+  <button class="btn" onclick="scrollToSection('projects')">View Projects</button>
+</section>
+
+<section id="about" class="fade">
+  <h2>About Me</h2>
+  <p>Write something about yourself here.</p>
+</section>
+
+<section id="skills" class="fade">
+  <h2>My Skills</h2>
+
+  <div class="skill">
+    <p>HTML</p>
+    <div class="bar"><div class="fill" data-width="90%"></div></div>
+  </div>
+
+  <div class="skill">
+    <p>CSS</p>
+    <div class="bar"><div class="fill" data-width="80%"></div></div>
+  </div>
+
+  <div class="skill">
+    <p>JavaScript</p>
+    <div class="bar"><div class="fill" data-width="70%"></div></div>
+  </div>
+
+</section>
+
+<section id="projects" class="fade">
+  <h2>My Projects</h2>
+  <div class="cards">
+
+    <div class="card">
+      <h3>Project 1</h3>
+      <p>Description here</p>
+    </div>
+
+    <div class="card">
+      <h3>Project 2</h3>
+      <p>Description here</p>
+    </div>
+
+    <div class="card">
+      <h3>Project 3</h3>
+      <p>Description here</p>
+    </div>
+
+  </div>
+</section>
+
+<section id="contact" class="fade">
+  <h2>Contact</h2>
+  <p>Email: your@email.com</p>
+</section>
+
+<footer>
+  <p>© 2026 Your Name</p>
+</footer>
+
+<script>
+function scrollToSection(id) {
+  document.getElementById(id).scrollIntoView({ behavior:'smooth' });
+}
+
+// FADE
+const faders = document.querySelectorAll('.fade');
+const appearOnScroll = new IntersectionObserver((entries, observer)=>{
+  entries.forEach(entry=>{
+    if(!entry.isIntersecting) return;
+    entry.target.classList.add('show');
+    observer.unobserve(entry.target);
+  });
+},{ threshold:0.3 });
+
+faders.forEach(f=>appearOnScroll.observe(f));
+
+// SKILLS
+const fills = document.querySelectorAll('.fill');
+window.addEventListener('scroll', ()=>{
+  fills.forEach(fill=>{
+    const rect = fill.getBoundingClientRect();
+    if(rect.top < window.innerHeight){
+      fill.style.width = fill.getAttribute('data-width');
+    }
+  });
+});
+
+// PARTICLES
+const canvas = document.getElementById('bg');
+const ctx = canvas.getContext('2d');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+for(let i=0;i<80;i++){
+  particles.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    r:Math.random()*2,
+    dx:(Math.random()-0.5),
+    dy:(Math.random()-0.5)
+  });
+}
+
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle='#00f7ff';
+    ctx.fill();
+
+    p.x += p.dx;
+    p.y += p.dy;
+
+    if(p.x<0||p.x>canvas.width) p.dx*=-1;
+    if(p.y<0||p.y>canvas.height) p.dy*=-1;
+  });
+  requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+
+</body>
+</html>
